@@ -32,7 +32,7 @@ const styles = () => ({
     }
   },
   settingBtn: {
-    top: 80,
+    top: 105,
     backgroundColor: "rgba(0, 0, 0, 0.3)",
     color: "white",
     width: 48,
@@ -124,7 +124,9 @@ class App extends React.Component {
           )}
         >
           <Switch>
-            <Route exact path="/" component={Dashboard} />
+          <Route exact path="/" component={Dashboard} />
+           
+            <Route exact path="/test" component={Dashboard} />
             <Route path="/dashboard" component={Dashboard} />
             <Route path="/form" component={Form} />
             <Route path="/table/basic" component={BasicTable} />

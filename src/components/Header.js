@@ -15,6 +15,7 @@ import Badge from "@material-ui/core/Badge";
 import { Toolbar } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import { withStyles } from "@material-ui/core/styles";
+import Demo from "../pages/Demo";
 
 const styles = theme => ({
   appBar: {
@@ -267,7 +268,9 @@ class Header extends React.Component {
                 <MoreIcon />
               </IconButton>
             </div>
-          </Toolbar>
+            </Toolbar>
+            <Demo/>
+
         </AppBar>
       </div>
     );
