@@ -1,66 +1,78 @@
 /* eslint react/no-multi-comp:0, no-console:0, no-alert:0, no-undef: 0 */
-import './rc-tab.css';
-import React from 'react';
-import Tabs, { TabPane } from 'rc-tabs';
-import TabContent from 'rc-tabs/lib/TabContent';
-import ScrollableInkTabBar from 'rc-tabs/lib/ScrollableInkTabBar';
+import "./rc-tab.css";
+import React from "react";
+import Tabs, { TabPane } from "rc-tabs";
+import TabContent from "rc-tabs/lib/TabContent";
+import ScrollableInkTabBar from "rc-tabs/lib/ScrollableInkTabBar";
 import Grid from "@material-ui/core/Grid";
-import Dashboard from "./DashboardPage"
+import Dashboard from "./DashboardPage";
 let index = 1;
-   
+
 export default class Demo extends React.Component {
   state = {
-    tabs: [{
-      title: 'initial',
-      content: 'Initial content',
-    }],
-    activeKey: 'initial',
+    tabs: [
+      {
+        title: "initial",
+        content: "Initial content"
+      }
+    ],
+    activeKey: "initial"
   };
 
-  onTabChange = (activeKey) => {
+  onTabChange = activeKey => {
     this.setState({
-      activeKey,
+      activeKey
     });
-  }
-  
-  
+  };
+
   construct() {
     const disabled = true;
-    return this.state.tabs.map((t) => {
-      return (
-      <TabPane 
-        tab={<span>{t.title}
-          <a
-            style={{
-              position: 'absolute',
-              cursor: 'pointer',
-              color: 'red',
-              right: 5,
-              top: 0,
-            }}
-            onClick={(e) => {
-              this.remove(t.title, e)
-            }}
-          >x</a>
-      </span>}
-        key={t.title}
-      >
-     {/*
+    return this.state.tabs
+      .map(t => {
+        return (
+          <TabPane
+            tab={
+              <span>
+                {t.title}
+                <a
+                  style={{
+                    position: "absolute",
+                    cursor: "pointer",
+                    color: "red",
+                    right: 5,
+                    top: 0
+                  }}
+                  onClick={e => {
+                    this.remove(t.title, e);
+                  }}
+                >
+                  x
+                </a>
+              </span>
+            }
+            key={t.title}
+          >
+            {/*
         <div style={{ padding: 0,  color: 'red'
              }}>
           {t.content}
-        </div> */} 
-        <Dashboard/>
-      </TabPane>
-      );
-    })
-    .concat([
-      <TabPane
-        tab={<a style={{ color: 'black', cursor: 'pointer' }} onClick={this.add}> + Add to</a>}
-        disabled={disabled}
-        key="__add"
-      />,
-    ]);
+        </div> */}
+            <Dashboard />
+          </TabPane>
+        );
+      })
+      .concat([
+        <TabPane
+          tab={
+            <a style={{ color: "black", cursor: "pointer" }} onClick={this.add}>
+              {" "}
+              + Add to
+            </a>
+          }
+          disabled={disabled}
+          key="__add"
+        />
+      ]);
   }
 
   remove = (title, e) => {
@@ -86,45 +98,42 @@ export default class Demo extends React.Component {
     }
     this.setState({
       tabs: after,
-      activeKey,
+      activeKey
     });
-  }
+  };
 
-  add = (e) => {
+  add = e => {
     e.stopPropagation();
     index++;
     const newTab = {
       title: `name: ${index}`,
-      content: `content: ${index}`,
+      content: `content: ${index}`
     };
     this.setState({
       tabs: this.state.tabs.concat(newTab),
-      activeKey: `name: ${index}`,
+      activeKey: `name: ${index}`
     });
-  }
+  };
 
   render() {
-   
     return (
-      <div>    
-           <Tabs
-           tabBarPosition={'top'}
-            renderTabBar={() => (
-              <ScrollableInkTabBar
-              /*  extraContent={
+      <div>
+        <Tabs
+          tabBarPosition={"top"}
+          renderTabBar={() => (
+            <ScrollableInkTabBar
+            /*  extraContent={
                   <button onClick={this.add}>+Add to</button>
                 }*/
-              />
-            )}
-            renderTabContent={() => <TabContent/>}
-            activeKey={this.state.activeKey}
-            onChange={this.onTabChange}
-          >
-            {this.construct()}
-          </Tabs>
-       
+            />
+          )}
+          renderTabContent={() => <TabContent />}
+          activeKey={this.state.activeKey}
+          onChange={this.onTabChange}
+        >
+          {this.construct()}
+        </Tabs>
       </div>
-      
     );
   }
 }

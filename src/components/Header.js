@@ -268,9 +268,8 @@ class Header extends React.Component {
                 <MoreIcon />
               </IconButton>
             </div>
-            </Toolbar>
-            <Demo/>
-
+          </Toolbar>
+          {/* <Demo/> */}
         </AppBar>
       </div>
     );

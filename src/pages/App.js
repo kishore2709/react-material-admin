@@ -16,6 +16,11 @@ import NotFound from "./NotFoundPage";
 import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
 import defaultTheme, { customTheme } from "../theme";
 
+import Tabs, { TabPane } from "rc-tabs";
+import TabContent from "rc-tabs/lib/TabContent";
+import ScrollableInkTabBar from "rc-tabs/lib/ScrollableInkTabBar";
+let index = 1;
+
 const styles = () => ({
   container: {
     margin: "80px 20px 20px 15px",
@@ -60,7 +65,14 @@ class App extends React.Component {
         window.innerWidth &&
         window.innerWidth >= defaultTheme.breakpoints.values.md
           ? true
-          : false
+          : false,
+      tabs: [
+        {
+          title: "initial",
+          content: "Initial content"
+        }
+      ],
+      activeKey: "initial"
     };
 
     this.handleChangeRightDrawer = this.handleChangeRightDrawer.bind(this);
@@ -88,6 +100,109 @@ class App extends React.Component {
       theme
     });
   }
+  onTabChange = activeKey => {
+    this.setState({
+      activeKey
+    });
+  };
+
+  construct() {
+    const disabled = true;
+    return this.state.tabs
+      .map(t => {
+        return (
+          <TabPane
+            tab={
+              <span>
+                {t.title}
+                <a
+                  style={{
+                    position: "absolute",
+                    cursor: "pointer",
+                    color: "red",
+                    right: 5,
+                    top: 0
+                  }}
+                  onClick={e => {
+                    this.remove(t.title, e);
+                  }}
+                >
+                  x
+                </a>
+              </span>
+            }
+            key={t.title}
+          >
+            {/*
+        <div style={{ padding: 0,  color: 'red'
+             }}>
+          {t.content}
+        </div> */}
+            <Switch>
+              <Route exact path="/" component={Dashboard} />
+
+              <Route exact path="/test" component={Dashboard} />
+              <Route exact path="/dashboard" component={Dashboard} />
+              <Route exact path="/form" component={Form} />
+              <Route exact path="/table/basic" component={BasicTable} />
+              <Route exact path="/table/data" component={DataTable} />
+              <Route component={NotFound} />
+            </Switch>
+          </TabPane>
+        );
+      })
+      .concat([
+        <TabPane
+          tab={
+            <a style={{ color: "black", cursor: "pointer" }} onClick={this.add}>
+              + Add to
+            </a>
+          }
+          // disabled={disabled}
+          key="__add"
+        />
+      ]);
+  }
+
+  remove = (title, e) => {
+    e.stopPropagation();
+    if (this.state.tabs.length === 1) {
+      alert("Only one left, can't delete");
+      return;
+    }
+    let foundIndex = 0;
+    const after = this.state.tabs.filter((t, i) => {
+      if (t.title !== title) {
+        return true;
+      }
+      foundIndex = i;
+      return false;
+    });
+    let activeKey = this.state.activeKey;
+    if (activeKey === title) {
+      if (foundIndex) {
+        foundIndex--;
+      }
+      activeKey = after[foundIndex].title;
+    }
+    this.setState({
+      tabs: after,
+      activeKey
+    });
+  };
+
+  add = e => {
+    e.stopPropagation();
+    index++;
+    const newTab = {
+      title: `name: ${index}`,
+      content: `content: ${index}`
+    };
+    this.setState({
+      tabs: this.state.tabs.concat(newTab),
+      activeKey: `name: ${index}`
+    });
+  };
 
   render() {
     const { classes } = this.props;
@@ -123,16 +238,34 @@ class App extends React.Component {
             !navDrawerOpen && classes.containerFull
           )}
         >
-          <Switch>
-          <Route exact path="/" component={Dashboard} />
-           
+          {/* <Switch>
+            <Route exact path="/" component={Dashboard} />
+
             <Route exact path="/test" component={Dashboard} />
             <Route path="/dashboard" component={Dashboard} />
             <Route path="/form" component={Form} />
             <Route path="/table/basic" component={BasicTable} />
             <Route path="/table/data" component={DataTable} />
             <Route component={NotFound} />
-          </Switch>
+          </Switch> */}
+
+          <div>
+            <Tabs
+              tabBarPosition={"top"}
+              renderTabBar={() => (
+                <ScrollableInkTabBar
+                /*  extraContent={
+                  <button onClick={this.add}>+Add to</button>
+                }*/
+                />
+              )}
+              renderTabContent={() => <TabContent />}
+              activeKey={this.state.activeKey}
+              onChange={this.onTabChange}
+            >
+              {this.construct()}
+            </Tabs>
+          </div>
         </div>
       </MuiThemeProvider>
     );
