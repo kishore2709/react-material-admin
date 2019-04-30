@@ -83,7 +83,7 @@ class NestedMenuItem extends React.Component {
               {menu.icon}
             </ListItemIcon>
             {/* only show icon in Mini Drawer mode */}
-            {/* <span>{menu.text}</span> */}
+            <span>{menu.text}</span>
           </MenuItem>
         </Link>
       );
@@ -131,7 +131,7 @@ class NestedMenuItem extends React.Component {
     // no sub menus
     if (!menu.subMenus || !menu.subMenus.length) {
       return (
-        <Link key={key} to={menu.link}>
+        <Link key={key} to={menu.link} onClick={console.log(menu.link)}>
           <MenuItem classes={{ root: classes.menuItem }}>
             <ListItemIcon style={{ color: "white" }}>{menu.icon}</ListItemIcon>
             <span>{menu.text}</span>

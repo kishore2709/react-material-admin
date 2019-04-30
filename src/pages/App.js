@@ -21,6 +21,30 @@ import TabContent from "rc-tabs/lib/TabContent";
 import ScrollableInkTabBar from "rc-tabs/lib/ScrollableInkTabBar";
 let index = 1;
 
+const dashboardRoutes = [
+  {
+    path: "/",
+    component: Dashboard
+  },
+
+  {
+    path: "/dashboard",
+    component: Dashboard
+  },
+  {
+    path: "/form",
+    component: Form
+  },
+  {
+    path: "/table/basic",
+    component: BasicTable
+  },
+  {
+    path: "/table/data",
+    component: DataTable
+  }
+];
+
 const styles = () => ({
   container: {
     margin: "80px 20px 20px 15px",
@@ -107,6 +131,7 @@ class App extends React.Component {
   };
 
   construct() {
+    console.log(this.props);
     const disabled = true;
     return this.state.tabs
       .map(t => {
@@ -133,19 +158,16 @@ class App extends React.Component {
             }
             key={t.title}
           >
-            {/*
-        <div style={{ padding: 0,  color: 'red'
-             }}>
-          {t.content}
-        </div> */}
+            {/* <div style={{ padding: 0, color: "red" }}>{t.content}</div> */}
             <Switch>
-              <Route exact path="/" component={Dashboard} />
-
-              <Route exact path="/test" component={Dashboard} />
-              <Route exact path="/dashboard" component={Dashboard} />
-              <Route exact path="/form" component={Form} />
-              <Route exact path="/table/basic" component={BasicTable} />
-              <Route exact path="/table/data" component={DataTable} />
+              {dashboardRoutes.map(route => (
+                <Route
+                  exact
+                  path={route.path}
+                  component={route.component}
+                  key={t.index}
+                />
+              ))}
               <Route component={NotFound} />
             </Switch>
           </TabPane>
