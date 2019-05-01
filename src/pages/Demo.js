@@ -6,9 +6,12 @@ import TabContent from "rc-tabs/lib/TabContent";
 import ScrollableInkTabBar from "rc-tabs/lib/ScrollableInkTabBar";
 import Grid from "@material-ui/core/Grid";
 import Dashboard from "./DashboardPage";
+import { Route } from 'react-router-dom';
+import FormPage from "./FormPage";
 let index = 1;
 
 export default class Demo extends React.Component {
+  //key={index} menu={menu}
   state = {
     tabs: [
       {
@@ -57,7 +60,8 @@ export default class Demo extends React.Component {
              }}>
           {t.content}
         </div> */}
-            <Dashboard />
+          <Route key={1234} path="/dashboard" component={FormPage} />
+                  
           </TabPane>
         );
       })

@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { withRouter, Route, Switch } from "react-router-dom";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
@@ -92,18 +92,30 @@ class App extends React.Component {
           : false,
       tabs: [
         {
-          title: "initial",
-          content: "Initial content"
+          title: "dashboard"
         }
       ],
-      activeKey: "initial"
+      activeKey: "dashboard"
     };
 
     this.handleChangeRightDrawer = this.handleChangeRightDrawer.bind(this);
     this.handleChangeNavDrawer = this.handleChangeNavDrawer.bind(this);
     this.handleChangeTheme = this.handleChangeTheme.bind(this);
+    this.onHandlePage = this.onHandlePage.bind(this);
   }
-
+  onHandlePage = e => {
+    console.log(" onHandlePage ");
+    e.stopPropagation();
+    index++;
+    const newTab = {
+      title: `name: ${index}`,
+      content: `content: ${index}`
+    };
+    this.setState({
+      tabs: this.state.tabs.concat(newTab),
+      activeKey: this.state.activeKey
+    });
+  };
   handleChangeNavDrawer() {
     this.setState({
       navDrawerOpen: !this.state.navDrawerOpen
@@ -128,6 +140,8 @@ class App extends React.Component {
     this.setState({
       activeKey
     });
+    this.props.history.push("/"+activeKey);
+
   };
 
   construct() {
@@ -157,20 +171,26 @@ class App extends React.Component {
               </span>
             }
             key={t.title}
+            
           >
-            {/* <div style={{ padding: 0, color: "red" }}>{t.content}</div> */}
-            <Switch>
-              {dashboardRoutes.map(route => (
-                <Route
-                  exact
-                  path={route.path}
-                  component={route.component}
-                  key={t.index}
-                />
-              ))}
-              <Route component={NotFound} />
-            </Switch>
+            
+           {/*  
+
+           
+            */}
+             <Switch>
+          {dashboardRoutes.map(route => (
+            <Route
+              exact
+              path={route.path}
+              component={route.component}
+              key={t.index}
+            />
+          ))}
+          <Route component={NotFound} />
+        </Switch>
           </TabPane>
+         
         );
       })
       .concat([
@@ -213,18 +233,7 @@ class App extends React.Component {
     });
   };
 
-  add = e => {
-    e.stopPropagation();
-    index++;
-    const newTab = {
-      title: `name: ${index}`,
-      content: `content: ${index}`
-    };
-    this.setState({
-      tabs: this.state.tabs.concat(newTab),
-      activeKey: `name: ${index}`
-    });
-  };
+
 
   render() {
     const { classes } = this.props;
@@ -241,6 +250,7 @@ class App extends React.Component {
           navDrawerOpen={navDrawerOpen}
           handleChangeNavDrawer={this.handleChangeNavDrawer}
           menus={Data.menus}
+          onHandlePage ={this.onHandlePage}
         />
         <ButtonBase
           color="inherit"
