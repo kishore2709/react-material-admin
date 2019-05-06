@@ -19,28 +19,39 @@ import defaultTheme, { customTheme } from "../theme";
 import Tabs, { TabPane } from "rc-tabs";
 import TabContent from "rc-tabs/lib/TabContent";
 import ScrollableInkTabBar from "rc-tabs/lib/ScrollableInkTabBar";
-let index = 1;
 
+const initroutes = [
+  {
+    path: "/",
+    key: "dashboard",
+    component: Dashboard
+  }
+]
 const dashboardRoutes = [
   {
     path: "/",
+    key: "dashboard",
     component: Dashboard
   },
 
   {
     path: "/dashboard",
+    key: "dashboard",
     component: Dashboard
   },
   {
     path: "/form",
+    key: "form",
     component: Form
   },
   {
     path: "/table/basic",
+    key: "basic",
     component: BasicTable
   },
   {
     path: "/table/data",
+    key: "data",
     component: DataTable
   }
 ];
@@ -78,35 +89,19 @@ const styles = () => ({
 });
 
 class App extends React.Component {
-  updateTree = data => {
-    const treeData = data;
-    const treeList = [];
-    // 递归获取树列表
-    const getTreeList = data => {
-      data.forEach(node => {
-        if(!node.level){
-          treeList.push({ tab: node.name, key: node.path,locale:node.locale,closable:true,content:node.component });
-        }
-        if (node.routes && node.routes.length > 0) { //!node.hideChildrenInMenu &&
-          getTreeList(node.routes);
-        }
-      });
-    };
-    getTreeList(treeData);
-    return treeList;
-  };
 
   constructor(props) {
     super(props);
     // nav bar default open in desktop screen, and default closed in mobile screen
-    const {routes}  = 'dashboard';
+    //const {routes}  = 'dashboard';
     const routeKey = 'dashboard';
-    const tabLists = this.updateTree(routes);
+    //const tabLists = this.updateTree(initroutes);
+    const tabLists = initroutes;
     let tabList=[];
     tabLists.map((v) => {
       if(v.key === routeKey){
         if(tabList.length === 0){
-          v.closable = false
+          //v.closable = false
           tabList.push(v);
         }
       }
@@ -133,9 +128,16 @@ class App extends React.Component {
     this.onHandlePage = this.onHandlePage.bind(this);
   }
   onHandlePage = e => {
-    const {menuData} = this.props,{key} = e;
-    const tabLists = this.updateTreeList(menuData);
+    //const {menuData} = this.props,{key} = e;
+    const {key} = e;
+    console.log(this.props.location.pathname);
+    console.log(dashboardRoutes.find((route) => {
+      return route.path === this.props.location.pathname;
+    }));
+   // const tabLists = this.updateTreeList(initroutes);
+    const tabLists = dashboardRoutes.map(route => (route.key));
     const {tabListKey,tabList} =  this.state;
+    console.log(tabListKey);
     this.props.history.push(key);
     e.stopPropagation();
     this.setState({
@@ -191,7 +193,10 @@ class App extends React.Component {
     const getTreeList = data => {
         data.forEach(node => {
           if(!node.level){
-            treeList.push({ tab: node.name, key: node.path,locale:node.locale,closable:true,content:node.component });
+            treeList.push({ tab: node.name, key: node.path,
+              //locale:node.locale,
+              closable:true,
+              content:node.component });
           }
             if (node.children && node.children.length > 0) { //!node.hideChildrenInMenu &&
                 getTreeList(node.children);
@@ -205,7 +210,9 @@ class App extends React.Component {
   construct2() {
 
         return this.state.tabList.map(item => {
+          console.log(item.key);
           return (
+            
       <TabPane tab={item.tab} key={item.key} closable={item.closable}>
          <Switch>
       {dashboardRoutes.map(route => (
@@ -224,13 +231,16 @@ class App extends React.Component {
   }
   render() {
     const { classes,
-      location: { pathname },
-      route: { routes }
+      location: { pathname }
     } = this.props;
-    const { navDrawerOpen, rightDrawerOpen, theme,activeKey,routeKey } = this.state;
+    const { navDrawerOpen, rightDrawerOpen, theme } = this.state;
+    let {activeKey,routeKey} = this.state;
     if(pathname === '/'){
       // router.push(routeKey)
-      activeKey = routeKey
+     
+        activeKey=routeKey
+       
+     
   }
   //this.props.location.onHandlePage = this.onHandlePage;
     return (
