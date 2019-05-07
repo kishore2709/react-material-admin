@@ -13,7 +13,7 @@ import { fade } from "@material-ui/core/styles/colorManipulator";
 // import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
-import Demo from "../pages/Demo"
+import Demo from "../pages/Demo";
 
 const styles = theme => {
   return {
@@ -72,13 +72,13 @@ class NestedMenuItem extends React.Component {
   // in mini drawer mode, show icon and popup sub menus
   renderMiniMenus() {
     // eslint-disable-next-line react/prop-types
-    const { menu, key, classes } = this.props;
+    const { menu, key, classes, onHandlePage } = this.props;
     const { open, anchorEl } = this.state;
 
     // no sub menus
     if (!menu.subMenus || !menu.subMenus.length) {
       return (
-        <Link key={key} to={menu.link}>
+        <Link key={key} to={menu.link} onClick={onHandlePage}>
           <MenuItem classes={{ root: classes.miniMenuItem }}>
             <ListItemIcon className={classes.iconHover}>
               {menu.icon}
@@ -110,7 +110,7 @@ class NestedMenuItem extends React.Component {
           anchorEl={anchorEl}
         >
           {menu.subMenus.map((subMenu, index) => (
-            <Link key={index} to={subMenu.link}>
+            <Link key={index} to={subMenu.link} onClick={onHandlePage}>
               <MenuItem key={index} classes={{ root: classes.menuItem }}>
                 <ListItemIcon style={{ color: "white" }}>
                   {subMenu.icon}
@@ -126,7 +126,7 @@ class NestedMenuItem extends React.Component {
 
   renderLargeMenus() {
     // eslint-disable-next-line react/prop-types
-    const { menu, key, classes,onHandlePage } = this.props;
+    const { menu, key, classes, onHandlePage } = this.props;
     const { open } = this.state;
 
     // no sub menus
@@ -136,11 +136,10 @@ class NestedMenuItem extends React.Component {
           <MenuItem classes={{ root: classes.menuItem }}>
             <ListItemIcon style={{ color: "yellow" }}>{menu.icon}</ListItemIcon>
             <span>{menu.text}</span>
-           
-      {/* 
+
+            {/* 
        <Demo activeKey={1234} menu={menu} />
-      */} 
-  
+      */}
           </MenuItem>
         </Link>
       );
@@ -170,7 +169,7 @@ class NestedMenuItem extends React.Component {
             classes={{ root: classes.subMenus }}
           >
             {menu.subMenus.map((subMenu, index) => (
-              <Link key={index} to={subMenu.link}>
+              <Link key={index} to={subMenu.link} onClick={onHandlePage}>
                 <MenuItem key={index} classes={{ root: classes.menuItem }}>
                   <ListItemIcon style={{ color: "red" }}>
                     {subMenu.icon}
@@ -186,9 +185,9 @@ class NestedMenuItem extends React.Component {
   }
 
   render() {
-    const { navDrawerOpen,onHandlePage } = this.props;
-   
-   // console.log( this.props);
+    const { navDrawerOpen, onHandlePage } = this.props;
+
+    // console.log( this.props);
     if (navDrawerOpen) {
       return this.renderLargeMenus(onHandlePage);
     } else {

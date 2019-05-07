@@ -19,18 +19,12 @@ import defaultTheme, { customTheme } from "../theme";
 import Tabs, { TabPane } from "rc-tabs";
 import TabContent from "rc-tabs/lib/TabContent";
 import ScrollableInkTabBar from "rc-tabs/lib/ScrollableInkTabBar";
+let index = 1;
 
-const initroutes = [
-  {
-    path: "/",
-    key: "dashboard",
-    component: Dashboard
-  }
-]
 const dashboardRoutes = [
   {
     path: "/",
-    key: "dashboard",
+    key: "default",
     component: Dashboard
   },
 
@@ -89,24 +83,9 @@ const styles = () => ({
 });
 
 class App extends React.Component {
-
   constructor(props) {
     super(props);
     // nav bar default open in desktop screen, and default closed in mobile screen
-    //const {routes}  = 'dashboard';
-    const routeKey = 'dashboard';
-    //const tabLists = this.updateTree(initroutes);
-    const tabLists = initroutes;
-    let tabList=[];
-    tabLists.map((v) => {
-      if(v.key === routeKey){
-        if(tabList.length === 0){
-          //v.closable = false
-          tabList.push(v);
-        }
-      }
-    });
-
     this.state = {
       theme: defaultTheme,
       rightDrawerOpen: false,
@@ -116,10 +95,13 @@ class App extends React.Component {
         window.innerWidth >= defaultTheme.breakpoints.values.md
           ? true
           : false,
-         tabList:tabList,
-        tabListKey:[routeKey],
-        activeKey:routeKey,
-        routeKey
+      tabs: [
+        {
+          path: "/",
+          key: "default"
+        }
+      ],
+      activeKey: "default"
     };
 
     this.handleChangeRightDrawer = this.handleChangeRightDrawer.bind(this);
@@ -127,39 +109,37 @@ class App extends React.Component {
     this.handleChangeTheme = this.handleChangeTheme.bind(this);
     this.onHandlePage = this.onHandlePage.bind(this);
   }
+
   onHandlePage = e => {
-    //const {menuData} = this.props,{key} = e;
-    const {key} = e;
-    console.log(this.props.location.pathname);
-    console.log(dashboardRoutes.find((route) => {
-      return route.path === this.props.location.pathname;
-    }));
-   // const tabLists = this.updateTreeList(initroutes);
-    const tabLists = dashboardRoutes.map(route => (route.key));
-    const {tabListKey,tabList} =  this.state;
-    console.log(tabListKey);
-    this.props.history.push(key);
+    console.log(" onHandlePage ");
     e.stopPropagation();
-    this.setState({
-      activeKey:key
-    })
-    tabLists.map((v) => {
-      if(v.key === key){
-        if(tabList.length === 0){
-          v.closable = false
-          this.setState({
-            tabList:[...tabList,v]
-          })
-        }else{
-          if(!tabListKey.includes(v.key)){
-            this.setState({
-              tabList:[...tabList,v],
-              tabListKey:[...tabListKey,v.key]
-            })
-          }
-        }
-      }
-    })
+    console.log(this.props.location.pathname);
+    console.log(this.state.tabs);
+    const found = this.state.tabs.some(
+      el => el.path === this.props.location.pathname
+    );
+    if (!found) {
+      const newTab = {
+        path: this.props.location.pathname,
+        key: this.props.location.pathname
+      };
+      this.setState({
+        tabs: this.state.tabs.concat(newTab),
+        activeKey: newTab.key
+      });
+    }
+    // else {
+    //   this.onTabChange();
+    //   console.log(this.state.activeKey);
+    //   this.setState({
+    //     activeKey: dashboardRoutes.find(route => {
+    //       return route.path === this.props.location.pathname;
+    //     }).key
+    //   });
+    //   console.log(this.state.activeKey);
+
+    //   this.props.history.push(this.state.activeKey);
+    // }
   };
   handleChangeNavDrawer() {
     this.setState({
@@ -181,104 +161,148 @@ class App extends React.Component {
       theme
     });
   }
-  onTabChange= key => {
-    this.setState({ activeKey:key });
-    this.props.history.push("/"+key);
-
+  onTabChange = activeKey => {
+    console.log(" onTabChange ");
+    this.setState({
+      activeKey
+    });
+    console.log(activeKey);
+    this.props.history.push(activeKey);
   };
 
-  updateTreeList = data => {
-    const treeData = data;
-    const treeList = [];
-    const getTreeList = data => {
-        data.forEach(node => {
-          if(!node.level){
-            treeList.push({ tab: node.name, key: node.path,
-              //locale:node.locale,
-              closable:true,
-              content:node.component });
+  construct() {
+    console.log(this.props);
+    const disabled = true;
+    return this.state.tabs.map(t => {
+      return (
+        <TabPane
+          tab={
+            <span>
+              {t.key}
+              <a
+                style={{
+                  position: "absolute",
+                  cursor: "pointer",
+                  color: "red",
+                  right: 5,
+                  top: 0
+                }}
+                onClick={e => {
+                  this.remove(t.key, e);
+                }}
+              >
+                x
+              </a>
+            </span>
           }
-            if (node.children && node.children.length > 0) { //!node.hideChildrenInMenu &&
-                getTreeList(node.children);
-            }
-        });
-    };
-    getTreeList(treeData);
-    return treeList;
-};
-
-  construct2() {
-
-        return this.state.tabList.map(item => {
-          console.log(item.key);
-          return (
-            
-      <TabPane tab={item.tab} key={item.key} closable={item.closable}>
-         <Switch>
-      {dashboardRoutes.map(route => (
-        <Route
-          exact
-          path={route.path}
-          component={route.component}
-          key={item.key}
-        />
-      ))}
-      <Route component={NotFound} />
-    </Switch>
-      </TabPane>
-          );
-  })
+          key={t.key}
+        >
+          {/*  
+           
+            */}
+          <Switch>
+            {dashboardRoutes.map(route => (
+              <Route
+                exact
+                path={route.path}
+                component={route.component}
+                key={t.key}
+              />
+            ))}
+            <Route component={NotFound} />
+          </Switch>
+        </TabPane>
+      );
+    });
   }
+
+  remove = (title, e) => {
+    e.stopPropagation();
+    if (this.state.tabs.length === 1) {
+      alert("Only one left, can't delete");
+      return;
+    }
+    let foundIndex = 0;
+    const after = this.state.tabs.filter((t, i) => {
+      if (t.key !== title) {
+        return true;
+      }
+      foundIndex = i;
+      return false;
+    });
+    let activeKey = this.state.activeKey;
+    if (activeKey === title) {
+      if (foundIndex) {
+        foundIndex--;
+      }
+      activeKey = after[foundIndex].title;
+    }
+    this.setState({
+      tabs: after,
+      activeKey
+    });
+  };
+
   render() {
-    const { classes,
-      location: { pathname }
-    } = this.props;
+    const { classes } = this.props;
     const { navDrawerOpen, rightDrawerOpen, theme } = this.state;
-    let {activeKey,routeKey} = this.state;
-    if(pathname === '/'){
-      // router.push(routeKey)
-     
-        activeKey=routeKey
-       
-     
-  }
-  //this.props.location.onHandlePage = this.onHandlePage;
+
     return (
       <MuiThemeProvider theme={theme}>
         <Header
           handleChangeNavDrawer={this.handleChangeNavDrawer}
-          navDrawerOpen={navDrawerOpen}/>
+          navDrawerOpen={navDrawerOpen}
+        />
 
         <LeftDrawer
           navDrawerOpen={navDrawerOpen}
           handleChangeNavDrawer={this.handleChangeNavDrawer}
           menus={Data.menus}
-          onHandlePage ={this.onHandlePage} />
+          onHandlePage={this.onHandlePage}
+        />
         <ButtonBase
           color="inherit"
           classes={{ root: classes.settingBtn }}
-          onClick={this.handleChangeRightDrawer}  >
+          onClick={this.handleChangeRightDrawer}
+        >
           <i className="fa fa-cog fa-3x" />
         </ButtonBase>
         <RightDrawer
           rightDrawerOpen={rightDrawerOpen}
           handleChangeRightDrawer={this.handleChangeRightDrawer}
-          handleChangeTheme={this.handleChangeTheme}  />
+          handleChangeTheme={this.handleChangeTheme}
+        />
         <div
           className={classNames(
             classes.container,
             !navDrawerOpen && classes.containerFull
           )}
         >
+          {/* <Switch>
+            <Route exact path="/" component={Dashboard} />
+            <Route exact path="/test" component={Dashboard} />
+            <Route path="/dashboard" component={Dashboard} />
+            <Route path="/form" component={Form} />
+            <Route path="/table/basic" component={BasicTable} />
+            <Route path="/table/data" component={DataTable} />
+            <Route component={NotFound} />
+          </Switch> */}
+
           <div>
             <Tabs
-            activeKey={activeKey}
               tabBarPosition={"top"}
-              renderTabBar={() => ( <ScrollableInkTabBar /> )}
+              renderTabBar={() => (
+                <ScrollableInkTabBar
+                /*  extraContent={
+                  <button onClick={this.add}>+Add to</button>
+                }*/
+                />
+              )}
               renderTabContent={() => <TabContent />}
+              activeKey={this.state.activeKey}
               onChange={this.onTabChange}
             >
-          { this.construct2() }
+              {this.construct()}
             </Tabs>
           </div>
         </div>
