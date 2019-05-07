@@ -24,23 +24,28 @@ let index = 1;
 const dashboardRoutes = [
   {
     path: "/",
+    key: "default",
     component: Dashboard
   },
 
   {
     path: "/dashboard",
+    key: "dashboard",
     component: Dashboard
   },
   {
     path: "/form",
+    key: "form",
     component: Form
   },
   {
     path: "/table/basic",
+    key: "basic",
     component: BasicTable
   },
   {
     path: "/table/data",
+    key: "data",
     component: DataTable
   }
 ];
@@ -92,10 +97,11 @@ class App extends React.Component {
           : false,
       tabs: [
         {
-          title: "dashboard"
+          path: "/",
+          key: "default"
         }
       ],
-      activeKey: "dashboard"
+      activeKey: "default"
     };
 
     this.handleChangeRightDrawer = this.handleChangeRightDrawer.bind(this);
@@ -106,10 +112,9 @@ class App extends React.Component {
   onHandlePage = e => {
     console.log(" onHandlePage ");
     e.stopPropagation();
-    index++;
     const newTab = {
-      title: `name: ${index}`,
-      content: `content: ${index}`
+      path: this.props.location.pathname,
+      key: this.props.location.pathname
     };
     this.setState({
       tabs: this.state.tabs.concat(newTab),
@@ -137,10 +142,12 @@ class App extends React.Component {
     });
   }
   onTabChange = activeKey => {
+    console.log(" onTabChange ");
     this.setState({
       activeKey
     });
-    this.props.history.push("/"+activeKey);
+    console.log(activeKey);
+    this.props.history.push("#/"+activeKey);
 
   };
 
@@ -153,7 +160,7 @@ class App extends React.Component {
           <TabPane
             tab={
               <span>
-                {t.title}
+                {t.key}
                 <a
                   style={{
                     position: "absolute",
@@ -163,14 +170,14 @@ class App extends React.Component {
                     top: 0
                   }}
                   onClick={e => {
-                    this.remove(t.title, e);
+                    this.remove(t.key, e);
                   }}
                 >
                   x
                 </a>
               </span>
             }
-            key={t.title}
+            key={t.key}
             
           >
             
@@ -184,7 +191,7 @@ class App extends React.Component {
               exact
               path={route.path}
               component={route.component}
-              key={t.index}
+              key={t.key}
             />
           ))}
           <Route component={NotFound} />
