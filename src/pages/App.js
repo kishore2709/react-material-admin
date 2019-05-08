@@ -50,6 +50,7 @@ const dashboardRoutes = [
   }
 ];
 
+var defComponent = Dashboard;
 const styles = () => ({
   container: {
     margin: "80px 20px 20px 15px",
@@ -110,10 +111,21 @@ class App extends React.Component {
     this.onHandlePage = this.onHandlePage.bind(this);
   }
 
+  comp(key) {
+    const compnt = dashboardRoutes.find(routes => routes.path === key);
+    if (typeof compnt === "undefined") {
+      return "Dashboard";
+    } else {
+      return compnt.component;
+    }
+  }
+
   onHandlePage = e => {
     console.log(" onHandlePage ");
     e.stopPropagation();
     console.log(this.props.location.pathname);
+    console.log(this.props);
+
     console.log(this.state.tabs);
     const found = this.state.tabs.some(
       el => el.path === this.props.location.pathname
@@ -127,19 +139,13 @@ class App extends React.Component {
         tabs: this.state.tabs.concat(newTab),
         activeKey: newTab.key
       });
+    } else {
+      this.setState({
+        activeKey: dashboardRoutes.find(route => {
+          return route.path === this.props.location.pathname;
+        }).path
+      });
     }
-    // else {
-    //   this.onTabChange();
-    //   console.log(this.state.activeKey);
-    //   this.setState({
-    //     activeKey: dashboardRoutes.find(route => {
-    //       return route.path === this.props.location.pathname;
-    //     }).key
-    //   });
-    //   console.log(this.state.activeKey);
-
-    //   this.props.history.push(this.state.activeKey);
-    // }
   };
   handleChangeNavDrawer() {
     this.setState({
@@ -173,6 +179,7 @@ class App extends React.Component {
   construct() {
     console.log(this.props);
     const disabled = true;
+    console.log(this.state.tabs);
     return this.state.tabs.map(t => {
       return (
         <TabPane
@@ -197,9 +204,19 @@ class App extends React.Component {
           }
           key={t.key}
         >
-          {/*  
-           
-            */}
+          {/*      
+          dashboardRoutes.find(routes => routes.key === t.key)
+          <Route
+            exact
+            key={t.key}
+            path={t.path}
+            component={
+              dashboardRoutes.filter(routes => routes.key == t.key).component
+            }
+          /> */}
+
+          {/* <Route exact key={t.key} path={t.path} component={this.comp(t.key)} /> */}
+
           <Switch>
             {dashboardRoutes.map(route => (
               <Route

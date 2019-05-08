@@ -191,14 +191,14 @@ class NestedMenuItem extends React.Component {
     if (navDrawerOpen) {
       return this.renderLargeMenus(onHandlePage);
     } else {
-      return this.renderMiniMenus();
+      return this.renderMiniMenus(onHandlePage);
     }
   }
 }
 
 NestedMenuItem.propTypes = {
   key: PropTypes.string,
-  //onHandlePage: PropTypes.func,
+  onHandlePage: PropTypes.func,
   menu: PropTypes.object,
   classes: PropTypes.object
 };
