@@ -165,7 +165,7 @@ class EnhancedTable extends React.Component {
                       <TableCell>{n.category}</TableCell>
                       <TableCell>
                         <Link className="button" to="/form">
-                          <Button mini={true} variant="fab" zDepth={0}>
+                          <Button mini={true} zdepth={0}>
                             <ContentCreate />
                           </Button>
                         </Link>

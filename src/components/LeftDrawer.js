@@ -13,7 +13,7 @@ const drawStyles = theme => {
   return {
     drawerPaper: {
       width: theme.drawer.width,
-      backgroundColor: "rgb(33, 33, 33)",
+      backgroundColor: "rgb(31, 91, 113)",
       color: "white",
       borderRight: "0px",
       boxShadow:
@@ -67,7 +67,13 @@ const drawStyles = theme => {
 };
 
 const LeftDrawer = props => {
-  let { navDrawerOpen, classes, theme, handleChangeNavDrawer,onHandlePage } = props;
+  let {
+    navDrawerOpen,
+    classes,
+    theme,
+    handleChangeNavDrawer,
+    onHandlePage
+  } = props;
 
   const drawerContent = () => (
     <div>
@@ -82,13 +88,19 @@ const LeftDrawer = props => {
           src={data.user.avatar}
           size={navDrawerOpen ? 48 : 32}
           classes={{ root: classes.avatarIcon }}
-          onClick={onHandlePage}
+          onClick={e => {
+            onHandlePage(e, "index");
+          }}
         />
         <span className={classes.avatarSpan}>{data.user.userName}</span>
       </div>
       {props.menus.map((menu, index) => (
-        <NestedMenuItem key={index} menu={menu} navDrawerOpen={navDrawerOpen} 
-        onHandlePage={onHandlePage}/>
+        <NestedMenuItem
+          key={index}
+          menu={menu}
+          navDrawerOpen={navDrawerOpen}
+          onHandlePage={onHandlePage}
+        />
       ))}
     </div>
   );

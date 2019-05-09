@@ -50,7 +50,6 @@ const dashboardRoutes = [
   }
 ];
 
-var defComponent = Dashboard;
 const styles = () => ({
   container: {
     margin: "80px 20px 20px 15px",
@@ -98,11 +97,11 @@ class App extends React.Component {
           : false,
       tabs: [
         {
-          path: "/",
-          key: "default"
+          path: "/dashboard",
+          key: "/dashboard"
         }
       ],
-      activeKey: "default"
+      activeKey: "/dashboard"
     };
 
     this.handleChangeRightDrawer = this.handleChangeRightDrawer.bind(this);
@@ -120,20 +119,13 @@ class App extends React.Component {
     }
   }
 
-  onHandlePage = e => {
-    console.log(" onHandlePage ");
+  onHandlePage = (e, pathName) => {
     e.stopPropagation();
-    console.log(this.props.location.pathname);
-    console.log(this.props);
-
-    console.log(this.state.tabs);
-    const found = this.state.tabs.some(
-      el => el.path === this.props.location.pathname
-    );
+    const found = this.state.tabs.some(el => el.path === pathName);
     if (!found) {
       const newTab = {
-        path: this.props.location.pathname,
-        key: this.props.location.pathname
+        path: pathName,
+        key: pathName
       };
       this.setState({
         tabs: this.state.tabs.concat(newTab),
@@ -142,7 +134,7 @@ class App extends React.Component {
     } else {
       this.setState({
         activeKey: dashboardRoutes.find(route => {
-          return route.path === this.props.location.pathname;
+          return route.path === pathName;
         }).path
       });
     }
@@ -168,18 +160,13 @@ class App extends React.Component {
     });
   }
   onTabChange = activeKey => {
-    console.log(" onTabChange ");
     this.setState({
       activeKey
     });
-    console.log(activeKey);
     this.props.history.push(activeKey);
   };
 
   construct() {
-    console.log(this.props);
-    const disabled = true;
-    console.log(this.state.tabs);
     return this.state.tabs.map(t => {
       return (
         <TabPane
@@ -204,19 +191,6 @@ class App extends React.Component {
           }
           key={t.key}
         >
-          {/*      
-          dashboardRoutes.find(routes => routes.key === t.key)
-          <Route
-            exact
-            key={t.key}
-            path={t.path}
-            component={
-              dashboardRoutes.filter(routes => routes.key == t.key).component
-            }
-          /> */}
-
-          {/* <Route exact key={t.key} path={t.path} component={this.comp(t.key)} /> */}
-
           <Switch>
             {dashboardRoutes.map(route => (
               <Route

@@ -78,7 +78,13 @@ class NestedMenuItem extends React.Component {
     // no sub menus
     if (!menu.subMenus || !menu.subMenus.length) {
       return (
-        <Link key={key} to={menu.link} onClick={onHandlePage}>
+        <Link
+          key={key}
+          to={menu.link}
+          onClick={e => {
+            onHandlePage(e, menu.link);
+          }}
+        >
           <MenuItem classes={{ root: classes.miniMenuItem }}>
             <ListItemIcon className={classes.iconHover}>
               {menu.icon}
@@ -110,7 +116,13 @@ class NestedMenuItem extends React.Component {
           anchorEl={anchorEl}
         >
           {menu.subMenus.map((subMenu, index) => (
-            <Link key={index} to={subMenu.link} onClick={onHandlePage}>
+            <Link
+              key={index}
+              to={subMenu.link}
+              onClick={e => {
+                onHandlePage(e, subMenu.link);
+              }}
+            >
               <MenuItem key={index} classes={{ root: classes.menuItem }}>
                 <ListItemIcon style={{ color: "white" }}>
                   {subMenu.icon}
@@ -132,7 +144,13 @@ class NestedMenuItem extends React.Component {
     // no sub menus
     if (!menu.subMenus || !menu.subMenus.length) {
       return (
-        <Link key={key} to={menu.link} onClick={onHandlePage}>
+        <Link
+          key={key}
+          to={menu.link}
+          onClick={e => {
+            onHandlePage(e, menu.link);
+          }}
+        >
           <MenuItem classes={{ root: classes.menuItem }}>
             <ListItemIcon style={{ color: "yellow" }}>{menu.icon}</ListItemIcon>
             <span>{menu.text}</span>
@@ -169,7 +187,13 @@ class NestedMenuItem extends React.Component {
             classes={{ root: classes.subMenus }}
           >
             {menu.subMenus.map((subMenu, index) => (
-              <Link key={index} to={subMenu.link} onClick={onHandlePage}>
+              <Link
+                key={index}
+                to={subMenu.link}
+                onClick={e => {
+                  onHandlePage(e, subMenu.link);
+                }}
+              >
                 <MenuItem key={index} classes={{ root: classes.menuItem }}>
                   <ListItemIcon style={{ color: "red" }}>
                     {subMenu.icon}

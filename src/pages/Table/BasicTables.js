@@ -39,7 +39,6 @@ const TablePage = () => {
       <Link to="/form">
         <Button
           mini={true}
-          variant="fab"
           style={styles.floatingActionButton}
           color="secondary"
         >
